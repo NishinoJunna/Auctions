@@ -30,6 +30,5 @@
 	<?= $this->element("menu/" . $menu) ?>
 	<?= $this->element("content") ?>
 	<?= $this->fetch('script') ?>
-
 </body>
 </html>

@@ -75,6 +75,10 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->fallbacks(DashedRoute::class);
 });
 
+Router::prefix('admin',['_namePrefix'=>'admin:'], function ($routes){
+	$routes->connect("/",["controller"=>"Homes","action"=>"viewOnAuction"]);
+	$routes->fallbacks(DashedRoute::class);
+});
 /**
  * Load all plugin routes.  See the Plugin documentation on
  * how to customize the loading of plugin routes.

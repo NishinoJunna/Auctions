@@ -1,0 +1,84 @@
+@CHARSET "UTF-8";
+
+body {
+	padding-top: 50px;
+}
+
+.main {
+	padding: 20px 40px;
+	background-color:#fff;
+}
+
+.main .page-header {
+	margin-top:0;
+}
+
+a.view_button {
+	display:inline-block;
+	width:150px;
+	height:40px;
+	padding:10px;
+	text-align:center;
+	background-color:skyblue;
+	border-radius:5px;
+	text-decoration:none;
+	margin-left:500px;
+	color:white;
+}
+
+div.talk{
+	width:100%;	
+}
+
+.my_message{
+	float:right;
+	margin:10px;
+	padding:10px;
+	background-color:lightgreen;
+	width:300px;
+	border-radius:8px;
+}
+
+.other_message{
+	float:left;
+	margin:10px;
+	padding:10px;
+	border:2px solid silver;
+	width:300px;
+	border-radius:8px;
+}
+
+.clear{
+	clear:both;
+}
+
+a.s_button{
+	border-radius:5px;
+	padding:3px;
+	background-color:#5D99FF;
+	color:white;
+	text-decoration:none;
+}
+.m_button{
+	border-radius:5px;
+	padding:8px;
+	margin:0 8px;
+	background-color:#8EB8FF;
+	color:white;
+	text-decoration:none;
+}
+
+table.original{
+	width:100%;
+	border:1px solid lightblue;
+	margin:30px 0;
+	border-radius:10px;
+}
+table.original th{
+	background-color:#8EB8FF;
+	padding:8px;
+	color:white;
+	}
+table.original td{
+	padding:8px;
+}

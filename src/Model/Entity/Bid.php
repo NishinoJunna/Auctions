@@ -3,7 +3,7 @@ namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 
-class Bids extends Entity {
+class Bid extends Entity {
 
 	protected $_accessible = [
 			'*' => true,

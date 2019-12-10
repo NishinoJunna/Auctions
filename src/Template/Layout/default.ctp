@@ -1,4 +1,5 @@
 <?php
+
 	$this->prepend('css', $this->Html->css([
 		'style.css'
 	]));
@@ -14,6 +15,7 @@
 	$this->prepend('script', $this->Html->script([
 		'//code.jquery.com/jquery-2.2.4.js'
 	]));
+
 ?>
 
 <!DOCTYPE html>
@@ -28,5 +30,6 @@
 	<?= $this->element("menu/" . $menu) ?>
 	<?= $this->element("content") ?>
 	<?= $this->fetch('script') ?>
+
 </body>
 </html>

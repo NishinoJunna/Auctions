@@ -66,7 +66,8 @@ class BidsController extends AppController{
 		$this->set(compact('bid','product','max'));
 	}
 	
-	public function bidsajax(){
+	public function bidsajax($id = null){
+		$max = $this->Bids->find()->where(['product_id'=>$id])->max('bid');
 		
 	}
 }

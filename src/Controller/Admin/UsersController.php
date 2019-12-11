@@ -17,10 +17,10 @@ class UsersController extends AppController{
 			$user=$this->Users->patchEntity($user,$this->request->data);
 			if($this->Users->save($user)){
 				$this->MyAuth->setUser($user->toArray());
-				$this->Flash->success(__('ユーザ情報を更新しました'));
+				$this->Flash->success(__('パスワードを変更しました'));
 				return $this->redirect(['controller'=>'Homes']);
 			}
-			$this->Flash->error(__('ユーザ情報の更新に失敗しました'));
+			$this->Flash->error(__('パスワードの変更に失敗しました'));
 		}
 		unset($user["password"]);
 		$this->set(compact('user'));

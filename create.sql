@@ -25,6 +25,7 @@ create table products(
 	start_price int(11) not null,
 	start_date datetime default null,
 	end_date datetime default null,
+	status int(11) not null,
 	modified datetime default null,
 	created datetime default null,
 	primary key (id)

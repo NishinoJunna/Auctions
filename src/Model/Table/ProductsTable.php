@@ -29,45 +29,48 @@ class ProductsTable extends Table
 
 	public function validationDefault(Validator $validator)
 	{
+		$validator->provider('Custom', 'App\Model\Validation\CustomValidation');
 		$validator
-			->integer('id')
-			->allowEmpty('id', 'create');
+		->integer('id')
+		->allowEmpty('id', 'create');
 		$validator
-			->integer('user_id')
-			->allowEmpty('user_id', 'create');
+		->integer('user_id')
+		->allowEmpty('user_id', 'create');
 		$validator
-			->integer('status')
-			->allowEmpty('status', 'create');
+		->integer('status')
+		->allowEmpty('status', 'create');
 		$validator
-			->requirePresence('name', 'create')
-			->notEmpty('name');
+		->requirePresence('name', 'create')
+		->notEmpty('name');
 		$validator
-			->integer('start_price')
-			->requirePresence('start_price', 'create')
-			->notEmpty('start_price');
+		->integer('start_price')
+		->requirePresence('start_price', 'create')
+		->notEmpty('start_price');
 		$validator
-			->requirePresence('description', 'create')
-			->notEmpty('description');
+		->requirePresence('description', 'create')
+		->notEmpty('description');
 		$validator
-			->date('start_date', ['ymd', 'mdy'])
-			->requirePresence('start_date', 'create')
-			->add('start_date',[
-					'date' => [
-							'rule' => ['boolean'],
-							'message' => '¡“ú‚æ‚è‘O‚Ì“ú•t‚Íƒ_ƒ',
-					],
-			])
-			->notEmpty('start_date');
+		->date('start_date', ['ymd', 'mdy'])
+		->requirePresence('start_date', 'create')
+		->add('start_date',[
+				'date' => [
+						'rule' => ['dateCheck'],
+						'provider' => 'Custom',
+						'message' => 'ä»Šæ—¥ã‚ˆã‚Šå‰ã®æ—¥ä»˜ã¯ãƒ€ãƒ¡',
+				],
+		])
+		->notEmpty('start_date');
 		$validator
-			->date('end_date', ['ymd', 'mdy'])
-			->requirePresence('end_date', 'create')
-			->add('end_date',[
-					'date' => [
-							'rule' => ['boolean'],
-							'message' => '¡“ú‚æ‚è‘O‚Ì“ú•t‚Íƒ_ƒ',
-					],
-			])
-			->notEmpty('end_date');
+		->date('end_date', ['ymd', 'mdy'])
+		->requirePresence('end_date', 'create')
+		->add('end_date',[
+				'date' => [
+						'rule' => 'dateCheck',
+						'provider' => 'Custom',
+						'message' => 'ä»Šæ—¥ã‚ˆã‚Šå‰ã®æ—¥ä»˜ã¯ãƒ€ãƒ¡',
+				],
+		])
+		->notEmpty('end_date');
 
 		return $validator;
 	}
@@ -75,4 +78,5 @@ class ProductsTable extends Table
 		$rules->add($rules->existsIn(['user_id'],'Users'));
 		return $rules;
 	}
+
 }

@@ -1,7 +1,7 @@
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<?=$this->Html->link("Auctions","/" ,["class"=>"navbar-brand"]); ?>
+			<?=$this->Html->link("No1 Auctions Site","/" ,["class"=>"navbar-brand"]); ?>
 		</div>
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav">

@@ -18,7 +18,7 @@ class UsersController extends AppController{
 			if($this->Users->save($user)){
 				$this->MyAuth->setUser($user->toArray());
 				$this->Flash->success(__('ユーザ情報を更新しました'));
-				return $this->redirect(['action'=>'index']);
+				return $this->redirect(['controller'=>'Homes']);
 			}
 			$this->Flash->error(__('ユーザ情報の更新に失敗しました'));
 		}

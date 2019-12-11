@@ -52,7 +52,6 @@ Router::scope('/', function (RouteBuilder $routes) {
 
 	$routes->connect('/', ['controller' => 'Products', 'action' => 'indexOn']);
 
-   
 
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
@@ -78,10 +77,12 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->fallbacks(DashedRoute::class);
 });
 
+
 	Router::prefix('admin', ['_namePrefix' => 'admin:'], function ($routes){
 		$routes->connect("/",["controller" => "Homes", "action" => "viewOnAuction"]);
 		$routes->fallbacks(DashedRoute::class);
 	});
+
 
 /**
  * Load all plugin routes.  See the Plugin documentation on

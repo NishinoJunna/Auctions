@@ -65,4 +65,8 @@ class BidsController extends AppController{
 		}
 		$this->set(compact('bid','product','max'));
 	}
+	
+	public function bidsajax(){
+		
+	}
 }

@@ -20,6 +20,7 @@ drop table if exists products;
 
 create table products(
 	id int(11) not null auto_increment,
+	user_id int(11) not null,
 	name varchar(255) not null,
 	description varchar(255) not null,
 	start_price int(11) not null,

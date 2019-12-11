@@ -79,7 +79,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 
 
 	Router::prefix('admin', ['_namePrefix' => 'admin:'], function ($routes){
-		$routes->connect("/",["controller" => "Homes", "action" => "viewOnAuction"]);
+		$routes->connect("/",["controller" => "Homes"]);
 		$routes->fallbacks(DashedRoute::class);
 	});
 

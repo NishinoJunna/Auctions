@@ -21,10 +21,18 @@ class ProductsController extends AppController
 
 	public function add()
 	{
+		date_default_timezone_set('Asia/Tokyo');
+
 		$username = $this->MyAuth->user();
 		$product = $this->Products->newEntity();
 		if ($this->request->is('post')){
 			$product->user_id = $username["id"];
+			/*$start_date = $this->request->data->start_date;
+			$end_date = $this->request->data->end_date;
+			if($end_date < $start_date){
+				$this->Flash->error(__('開始日'));
+				return;
+			}*/
 			$product = $this->Products->patchEntity($product, $this->request->data);
 			if($this->Products->save($product)){
 
@@ -45,7 +53,7 @@ class ProductsController extends AppController
 		$products = $this->paginate($this->Products->find()
 								->where(['user_id'=>$user['id']])
 								->andWhere(['status'=>1]));
-		$this->set('products');
+		$this->set(compact('products'));
 	}
 	
 	public function viewOff(){
@@ -57,7 +65,7 @@ class ProductsController extends AppController
 		$products = $this->paginate($this->Products->find()
 				->where(['user_id'=>$user['id']])
 				->andWhere(['status'=>2]));
-		$this->set('products');
+		$this->set(compact('products'));
 	}
 }
 

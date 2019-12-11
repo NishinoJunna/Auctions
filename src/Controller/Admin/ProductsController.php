@@ -48,7 +48,29 @@ class ProductsController extends AppController
 		$this->set(compact('product'));
 	}
 
-
+	public function viewOn(){
+		$user = $this->MyAuth->user();
+		$this->paginate = [
+				'limit'	=> 6,
+				'contain'	=>	['Users'],
+		];
+		$products = $this->paginate($this->Products->find()
+								->where(['user_id'=>$user['id']])
+								->andWhere(['status'=>1]));
+		$this->set(compact('products'));
+	}
+	
+	public function viewOff(){
+		$user = $this->MyAuth->user();
+		$this->paginate = [
+				'limit'	=> 6,
+				'contain'	=>	['Users'],
+		];
+		$products = $this->paginate($this->Products->find()
+				->where(['user_id'=>$user['id']])
+				->andWhere(['status'=>2]));
+		$this->set(compact('products'));
+	}
 }
 
 

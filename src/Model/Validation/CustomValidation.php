@@ -4,18 +4,19 @@ namespace App\Model\Validation;
 use Cake\Validation\Validation;
 
 /**
- * ƒJƒXƒ^ƒ€ƒoƒŠƒf[ƒVƒ‡ƒ“ƒNƒ‰ƒX
+ * ï¿½Jï¿½Xï¿½^ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½fï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½X
  */
 class CustomValidation extends Validation
 {
 	/**
-	 * ƒ[ƒ‹ƒAƒhƒŒƒX‚ÌƒoƒŠƒf[ƒVƒ‡ƒ“
-	 * “ú–{‚ÌŒg‘ÑƒLƒƒƒŠƒA(docomo, au)‚ÌƒhƒƒCƒ“‚ÉŒÀ‚èA˜A‘±ƒhƒbƒg‚â@’¼‘O‚Ìƒhƒbƒg‚ğ‹–‰Â‚·‚é
+	 * ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Aï¿½hï¿½ï¿½ï¿½Xï¿½Ìƒoï¿½ï¿½ï¿½fï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½
+	 * ï¿½ï¿½ï¿½{ï¿½ÌŒgï¿½ÑƒLï¿½ï¿½ï¿½ï¿½ï¿½A(docomo, au)ï¿½Ìƒhï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ÉŒï¿½ï¿½ï¿½Aï¿½Aï¿½ï¿½ï¿½hï¿½bï¿½gï¿½ï¿½@ï¿½ï¿½ï¿½Oï¿½Ìƒhï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½
 	 * @param string $check
 	 * @param bool $deep
 	 * @return bool
 	 */
 	public static function dateCheck($value) {
+
 		date_default_timezone_set('Asia/Tokyo');
 		$now = date("YmdHi");
 		$value = implode("",$value);

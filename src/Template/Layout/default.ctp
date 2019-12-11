@@ -24,11 +24,11 @@
 	<?= $this->Html->charset() ?>
 	<?= $this->Html->meta('icon') ?>
 	<title><?= $this->fetch('title') ?></title>
+	<?= $this->fetch('script') ?>
 	<?= $this->fetch('css') ?>
 </head>
 <body>
 	<?= $this->element("menu/" . $menu) ?>
 	<?= $this->element("content") ?>
-	<?= $this->fetch('script') ?>
 </body>
 </html>

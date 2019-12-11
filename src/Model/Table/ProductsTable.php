@@ -21,9 +21,7 @@ class ProductsTable extends Table
 		$this->hasMany('Bids', [
 				'foreignKey'	=>	'product_id'
 		]);
-		$this->hasMany('EndBids', [
-				'foreignKey'	=>	'product_id'
-		]);
+		
 	}
 
 	public function validationDefault(Validator $validator)

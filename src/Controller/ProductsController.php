@@ -7,23 +7,29 @@ class ProductsController extends AppController
 {
 	public function indexOn()
 	{
+		$now = date("YmdHi");
+		
 		$produits = $this->Products->find('all');
 		foreach ($produits as $produit){
-			$produit->toArray()["start_date"];
-			$p = implode("",$produit);
-			var_dump($produit->toArray()["start_date"]);
+			$start_date = h($produit->start_date->format("Ymdhi"));
+			$end_date = h($produit->end_date->format("Ymdhi"));
 			
-			die;
+			if($start_date <= $now){
+				$this->Products->updateAll(["status"=>1], ["id" => $produit->id ] );
+			}
+			if($now > $end_date){
+				$this->Products->updateAll(["status"=>2], ["id" => $produit->id ] );
+			}
 			
 		}
-		$username = $this->MyAuth->user();
+		
 		$this->paginate = [
 				'limit'	=> 6,
-				'contain'	=>	['Bids'],
+				'contain'	=>	[],
 		];
 
 
-		$products = $this->paginate($this->Products->contain('Bids')->find('all')->where(['status'=> 1]));
+		$products = $this->paginate($this->Products->find('all')->where(['status'=> 1]));
 
 		$this->set(compact('products'));
 	}

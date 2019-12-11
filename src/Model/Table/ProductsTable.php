@@ -21,7 +21,10 @@ class ProductsTable extends Table
 		$this->hasMany('Bids', [
 				'foreignKey'	=>	'product_id'
 		]);
-		
+		$this->belongsTo('Users',[
+				'foreignKey'=>'user_id',
+				'joinType'=>'inner'
+		]);
 	}
 
 	public function validationDefault(Validator $validator)
@@ -29,6 +32,12 @@ class ProductsTable extends Table
 		$validator
 			->integer('id')
 			->allowEmpty('id', 'create');
+		$validator
+			->integer('user_id')
+			->allowEmpty('user_id', 'create');
+		$validator
+			->integer('status')
+			->allowEmpty('status', 'create');
 		$validator
 			->requirePresence('name', 'create')
 			->notEmpty('name');
@@ -61,5 +70,9 @@ class ProductsTable extends Table
 			->notEmpty('end_date');
 
 		return $validator;
+	}
+	public function buildRules(RulesChecker $rules){
+		$rules->add($rules->existsIn(['user_id'],'Users'));
+		return $rules;
 	}
 }

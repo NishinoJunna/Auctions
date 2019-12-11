@@ -21,7 +21,9 @@
 		<td></td>
 		<td><?= h($product->start_date->format("Y年m月d日h時i分")) ?></td>
 		<td><?= h($product->end_date->format("Y年m月d日h時i分")) ?></td>
-		<td><?= $this->Html->link("入札",["controller" => "Bids", "action" => "add",$product->id]) ?></td>
+		<td>
+			<?= $this->Html->link("編集",["controller" => "Products", "action" => "edit",$product->id]) ?>
+		</td>
 	</tr>
 <?php endforeach; ?>
 </table>

@@ -31,6 +31,7 @@
 <tr>
 	<th scope="col">商品名</th>
 	<th scope="col">説明</th>
+	<th scope="col">ユーザ名</th>
 	<th scope="col">落札額</th>
 </tr>
 <?php if(isset($endbids)): ?>
@@ -38,6 +39,7 @@
 	<tr>
 		<td><?= $this->Number->format($endbid->name)  ?></td>
 		<td><?= h($endbid->description) ?></td>
+		<td><?=h($endbid->user_name) ?></td>
 		<td><?= $this->Number->format($endbid->bid)  ?></td>
 	</tr>
 <?php endforeach; ?>

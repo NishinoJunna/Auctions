@@ -15,8 +15,12 @@ class BidsController extends AppController{
 		$connection = ConnectionManager::get('default');
 		//入札の最大値をとる
 		$max = $connection
-		->execute('select max(b.bid), b.user_id, p.name, p.description, b.bid 
-					from bids as b inner join products as p
+		->execute('select max(b.bid), b.user_id, p.name, p.description, b.bid
+					from bids as b inner join
+					(select pr.name, pr.description, u.email as user_name, pr.status, pr.id 
+					from products as pr
+					inner join users as u 
+					on u.id = pr.user_id) p
 					on b.product_id = p.id
 					where p.status = 2
 					group by product_id')
@@ -46,7 +50,7 @@ class BidsController extends AppController{
 				}
 				$this->Flash->error(__('入札に失敗しました'));
 			}else{
-				$this->Flash->error(__('現在価格より多い額を入れてください'));
+				$this->Flash->error(__('現在価格より多い額で入札できます'));
 			}
 		}
 	}

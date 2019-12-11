@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/Controller/Admin/BidsController.php=UTF-8
 encoding//src/Controller/Admin/HomesController.php=UTF-8
 encoding//src/Controller/Admin/ProductsController.php=UTF-8
 encoding//src/Controller/UsersController.php=UTF-8

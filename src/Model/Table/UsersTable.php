@@ -5,6 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\ORM\Association\HasMany;
 
 class UsersTable extends Table {
 
@@ -14,6 +15,14 @@ class UsersTable extends Table {
 		$this->displayField('email');
 		$this->primaryKey('id');
 		$this->addBehavior('Timestamp');
+		$this->hasMany('Products',[
+				'foreignKey'=>'user_id',
+				'joinType'=>'inner'
+		]);
+		$this->hasMany('Bids',[
+				'foreignKey'=>'user_id',
+				'joinType'=>'inner'
+		]);
 	}
 	public function validationDefault(Validator $validator){
 		$validator

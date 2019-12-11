@@ -40,7 +40,13 @@ class BidsController extends AppController{
 		if($this->request->is('post')){
 			$data = $this->request->data['bid'];
 			$maxbid = $this->Bids->max('bid')->where(['product_id'=>$id]);
-			if($data > $maxbid){
+			$start_bid = $this->Bids->Products->find('start_price')->where(['product_id'=>$id]);
+			if(isset($maxbid)){
+				$max = $maxbid;
+			}else{
+				$max = $startbid;
+			}
+			if($data > $max){
 				$bid->bid = $data;
 				$bid->product_id = $id;
 				$bid->user_id = $user_id;

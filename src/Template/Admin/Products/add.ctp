@@ -5,7 +5,7 @@
 	echo $this->Form->input('description');
 	echo $this->Form->input('start_price');
 	echo $this->Form->input('start_date',['type'=>'datetime', 'minYear'=>date('Y'), 'interval'=> 15 ]);
-	echo $this->Form->input('end_date',['type'=>'datetime']);
+	echo $this->Form->input('end_date',['type'=>'datetime', 'minYear'=>date('Y'), 'interval'=> 15 ]);
 	echo $this->Form->button("登録");
 	echo $this->Form->end();
 ?>

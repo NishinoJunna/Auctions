@@ -16,11 +16,12 @@ class CustomValidation extends Validation
 	 * @return bool
 	 */
 	public static function dateCheck($value) {
-		$now = date("Y/m/d H:i");
-		if( $now  === $value || $now > $value ){
-			
-			return true;
+		date_default_timezone_set('Asia/Tokyo');
+		$now = date("YmdHi");
+		$value = implode("",$value);
+		if( $now === $value || $now > $value ){
+			return false;
 		}
-		return false;
+		return true;
 	}
 }

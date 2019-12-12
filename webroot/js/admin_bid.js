@@ -24,15 +24,23 @@ function adminOrderEditFormInit(){
 	$('.form-group').removeClass('has-error');
 }
 
-function successAction(){
+function successAction(result, bidding, maxs){
 	$('#loading').fadeOut();
 	if(result['status']=='success'){
-		showSuccessMessage('受注を更新しました');
+		showSuccessMessage('入札しました');
+		$('a.max_v').html(bidding);
+	}else if(result['status']=='less'){
+		showErrorMessage('現在価格より多い額で入札できます');
+		if($('a.max_v').html()>bidding){
+			showErrorMessage('最高額が更新されました');
+		}
+		showValidationMessage(result['errors']);
+		$('a.max_v').html(maxs);
 	}else{
-		showErrorMessage('登録に失敗しました');
+		showErrorMessage('入札に失敗しました');
 		showValidationMessage(result['errors']);
 	}
-	$('a.max_v').html(data['bid']);
+	
 }
 
 function errorMessage(){

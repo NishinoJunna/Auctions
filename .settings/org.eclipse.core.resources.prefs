@@ -1,9 +1,12 @@
 eclipse.preferences.version=1
+encoding//src/Controller/Admin/BidsController.php=UTF-8
 encoding//src/Controller/Admin/HomesController.php=UTF-8
 encoding//src/Controller/Admin/ProductsController.php=UTF-8
 encoding//src/Controller/UsersController.php=UTF-8
 encoding//src/Model/Table/ProductsTable.php=UTF-8
+encoding//src/Template/Admin/Bids/history_index.ctp=UTF-8
 encoding//src/Template/Admin/Homes/index.ctp=UTF-8
 encoding//src/Template/Admin/Products/add.ctp=UTF-8
 encoding//src/Template/Admin/Products/index.ctp=UTF-8
 encoding//src/Template/Element/Menu/admin.ctp=UTF-8
+encoding//src/Template/Products/index_on.ctp=UTF-8

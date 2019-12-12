@@ -27,12 +27,16 @@ class ProductsController extends AppController
 		$product = $this->Products->newEntity();
 		if ($this->request->is('post')){
 			$product->user_id = $username["id"];
-			/*$start_date = $this->request->data->start_date;
-			$end_date = $this->request->data->end_date;
+			$p = $this->request->data;
+			
+			$start_date = $p["start_date"];
+			$end_date = $p["end_date"];
+			$start_date = implode("",$start_date);
+			$end_date = implode("",$end_date);
 			if($end_date < $start_date){
-				$this->Flash->error(__('開始日'));
-				return;
-			}*/
+				$this->Flash->error(__('開始日時が終了日時より前に設定できません'));
+				return $this->redirect(['action' => 'index']);;
+			}
 			$product = $this->Products->patchEntity($product, $this->request->data);
 			if($this->Products->save($product)){
 

@@ -8,9 +8,9 @@ class HomesController extends AppController {
 	public function index() {
 		$this->paginate = [
 				'limit'	=> 6,
-				'contain'	=>	[]
+				'contain'	=>	['Bids']
 		];
-		$products = $this->paginate($this->loadModel('Products')->find('all')->where(['status'=> 1]));
+		$products = $this->paginate($this->loadModel('Products')->find('all')->contain('Bids')->where(['status'=> 1]));
 		
 		$this->set(compact('products'));
 	}

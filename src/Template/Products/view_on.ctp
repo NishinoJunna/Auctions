@@ -19,7 +19,7 @@
 <div class="panel panel-primary">
   <div class="panel-heading">現在価格</div>
   <div class="panel-body">
-    <?= $maxbid ?>
+    <?= $maxbid . "円"?>
   </div>
 </div>
 

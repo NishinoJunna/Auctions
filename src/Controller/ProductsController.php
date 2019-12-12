@@ -39,6 +39,10 @@ class ProductsController extends AppController
 	public function viewOn($id = null)
 	{
 		$maxbid = $this->loadModel('Bids')->find()->where(['product_id'=>$id])->max('bid');
+		if(!empty($maxbid)){
+			$maxbid = $maxbid->bid;
+		}
+		
 		$product = $this->Products
 			->get($id, ['contain' => ['Bids']]);
 		if(empty($maxbid)){

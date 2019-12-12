@@ -87,30 +87,28 @@ class BidsController extends AppController{
 		$product_id = $this->request->data['product_id'];
 		$max = $this->Bids->find()->where(['product_id'=>$product_id])->max('bid');
 		
-		//var_dump($product_id);
 		if($this->request->is(['ajax'])){
-		
 			if($this->request->data['bid'] > $max['bid']){
 				$bid->bid = $this->request->data['bid'];
 				$bid->product_id = $product_id;
 				$bid->user_id = $user_id;
 				if($this->Bids->save($bid)){
 					$result['status']="success";
-					$bidding = $this->request->data['bid'];
+					//$bidding = $this->request->data['bid'];
+					//$maxs = 0;
 					echo json_encode($result);
-					echo json_encode($bidding);
 					return;
 				}else{
 					$result['errors']=$bids->errors();
 				}
 			}elseif($this->request->data['bid']<=$max['bid']){
-				$result['status']='less';
-				$bidding = $this->request->data['bid'];
-				$maxs =$max['bid'];
+				$result['status']="less";
+				//$bidding = $this->request->data['bid'];
+				//$maxs =$max['bid'];
+						
 				echo json_encode($result);
-				echo json_encode($bidding);
-				echo json_encode($maxs);
 				return;
+		
 			}
 		}
  		$result['status']="error";

@@ -24,11 +24,11 @@ function adminOrderEditFormInit(){
 	$('.form-group').removeClass('has-error');
 }
 
-function successAction(result, bidding, maxs){
+function successAction(result){
 	$('#loading').fadeOut();
 	if(result['status']=='success'){
 		showSuccessMessage('入札しました');
-		$('a.max_v').html(bidding);
+		$('a.max_v').html($("#bid_v").val());
 	}else if(result['status']=='less'){
 		showErrorMessage('現在価格より多い額で入札できます');
 		if($('a.max_v').html()>bidding){

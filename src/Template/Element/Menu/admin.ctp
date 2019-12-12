@@ -17,8 +17,6 @@
 					<ul class="dropdown-menu">
 						<li><?=$this->Html->link("オークション開催中商品一覧","/admin/products/viewOn");?></li>
 						<li><?=$this->Html->link("オークションが終了した商品一覧","/admin/products/viewOff");?></li>
-						<li><?=$this->Html->link("オークション開催中商品入札状況一覧","/admin/products/indexOn");?></li>
-						<li><?=$this->Html->link("オークションが終了した商品入札状況一覧","/admin/products/indexOff");?></li>
 					</ul>
 				</li>
 			</ul>

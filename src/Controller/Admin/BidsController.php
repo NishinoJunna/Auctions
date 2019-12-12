@@ -66,8 +66,27 @@ class BidsController extends AppController{
 		$this->set(compact('bid','product','max'));
 	}
 	
-	public function bidsajax($id = null){
+	public function getMaxAjax($id = null){
+		$this->autoRender = false;
+		$user_id=$this->MyAuth->user('id');
+		$bid = $this->Bids->newEntity();
 		$max = $this->Bids->find()->where(['product_id'=>$id])->max('bid');
-		
+		echo json_encode($max);
+		if($this->request->is(['ajax'])){
+			$data = $this->request->data['bid'];
+			if($data > $max){
+				$bid->bid = $data;
+				$bid->product_id = $id;
+				$bid->user_id = $user_id;
+				if($this->Bids->save($bid)){
+					$result["status"] = "success";
+					echo json_encode($result);
+				}
+				$result["status"]='入札に失敗しました';
+				echo json_encode($result);
+			}else{
+				$result['status']='現在価格より多い額で入札できます';
+			}
+		}
 	}
 }

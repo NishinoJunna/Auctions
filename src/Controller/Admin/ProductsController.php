@@ -71,6 +71,33 @@ class ProductsController extends AppController
 				->andWhere(['status'=>2]));
 		$this->set(compact('products'));
 	}
+	
+	public function indexOn($id = null){
+		$this->paginate = [
+				'limit'	=> 10,
+				'contain'	=>	['Users'],
+		];
+		$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
+								->where(['product_id'=>$id])
+								->andWhere(['Products.status'=>1])
+								->order(["Bids.created"=>"desc"]));
+		
+		$this->set(compact('bids'));
+		
+	}
+	
+	public function indexOff($id = null){
+		$this->paginate = [
+				'limit'	=> 10,
+				'contain'	=>	['Users'],
+		];
+		$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
+				->where(['product_id'=>$id])
+				->andWhere(['Products.status'=>2])
+				->order(["Bids.created"=>"desc"]));
+		
+		$this->set(compact('bids'));
+	}
 }
 
 

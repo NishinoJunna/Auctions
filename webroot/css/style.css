@@ -12,3 +12,15 @@ body{
 
 .main .page-header {
 	margin-top: 0;
+
+#loading {
+	display:none;
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background: url(http://no1s.biz/kenshu/image/loader.gif) no-repeat center center #ccc;
+	opacity:0.5;
+	z-inedx:9999;
+}

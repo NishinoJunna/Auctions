@@ -2,36 +2,68 @@ $(function(){
 	$('#bidding').on('click',bidRequest);
 });
 
-function bidRequest(bid){
-	getMax(max);
-	var data = $("#bidadd").serialize();
+function bidRequest(event){
+	adminOrderEditFormInit();
+	$('#loading').fadeIn();
+	var data = $('#bidadd').serialize();
+	console.log(data);
 	$.ajax({
-		url: "/Auctions/admin/bids/getMaxAjax",
-		type: "post",
+		url: "/Auctions/admin/bids/getmaxajax",
+		type: "POST",
 		data: data,
 		dataType: "json",
-		success: successMessage,
+		success: successAction,
 		error: errorMessage,
 	});
+	
 }
 
-function successMessage(result){
-	console.log(result);
+function adminOrderEditFormInit(){
+	$('#message').remove();
+	$('.help-block').remove();
+	$('.form-group').removeClass('has-error');
 }
 
-function errorMessage(result){
-	console.log(result);
-}
-
-function getMax(max){
-	var nowmax = ("a.max_v").html();
-	if(nowmax > max){
-		console.log("最高額が更新されました");
+function successAction(){
+	$('#loading').fadeOut();
+	if(result['status']=='success'){
+		showSuccessMessage('受注を更新しました');
 	}else{
-		console.log("入札できます");
+		showErrorMessage('登録に失敗しました');
+		showValidationMessage(result['errors']);
+	}
+	$('a.max_v').html(data['bid']);
+}
+
+function errorMessage(){
+	console.log("失敗");
+}
+
+function showSuccessMessage(message){
+	var tag = '<div id="message" class="alert alert-success">';
+	tag += message;
+	tag += '</div>';
+	$('.main').prepend(tag);
+}
+
+function showErrorMessage(message){
+	var tag = '<div id="message" class="alert alert-danger">';
+	tag += message;
+	tag +='</div>';
+	$('.main').prepend(tag);
+}
+
+function showValidationMessage(errors){
+	for( key in errors ){
+		var obj = $("[name=']" + key + "']");
+		obj.parent().addClass('has-error');
+		var field = errors[key];
+		for( var value in field ){
+			var tag = '<div class="help-block">' + field[value] + '</div>';
+			obj.after(tag);
+		}
 	}
 }
 
-<?php $this->prepend('script',$this->Html->script('admin_bid')); ?>
 
-,["type"=>"button","id"=>"bidding"]
+

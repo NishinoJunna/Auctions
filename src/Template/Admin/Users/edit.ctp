@@ -9,7 +9,7 @@
 </tr>
 <tr>
 	<th scope="col"><?php echo "パスワード"; ?></th>
-	<td><?php echo $this->Form->input('password'); ?></td>
+	<td><?php echo $this->Form->input('password',['label' => false]); ?></td>
 </tr>
 </table>
 <?php

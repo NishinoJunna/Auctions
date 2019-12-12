@@ -37,10 +37,10 @@
 <?php if(isset($endbids)): ?>
 <?php foreach ($endbids as $endbid): ?>
 	<tr>
-		<td><?= $this->Number->format($endbid->name)  ?></td>
-		<td><?= h($endbid->description) ?></td>
-		<td><?=h($endbid->user_name) ?></td>
-		<td><?= $this->Number->format($endbid->bid)  ?></td>
+		<td><?= h($endbid['name'])  ?></td>
+		<td><?= h($endbid['description']) ?></td>
+		<td><?=h($endbid['user_name']) ?></td>
+		<td><?= $this->Number->format($endbid['bid'])  ?></td>
 	</tr>
 <?php endforeach; ?>
 <?php endif; ?>

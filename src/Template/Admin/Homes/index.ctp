@@ -16,21 +16,25 @@
 		$date = h($product->end_date->format("Ym")); 
 		date_default_timezone_set('Asia/Tokyo');
 		$now1 = date("Ym");
-			$now = date("Y-m-d");
-			$now = new DateTime($now);
-			$end_date = new DateTime($end_date);
-			$interval = date_diff($now,$end_date);
-			$rest = $interval->format('%a days');
+		$now = date("Y-m-d");
+		$now = new DateTime($now);
+		$end_date = new DateTime($end_date);
+		$interval = date_diff($now,$end_date);
+		$rest = $interval->format('%a');
 	?>
 	<tr>
 		<td><?= $this->Number->format($product->id)  ?></td>
 		<td><?= h($product->name) ?></td>
 		<td><?= h($product->description) ?></td>
 		<td><?= $this->Number->format(count($product->bids)) ?></td>
-		<td><?= $this->Number->format($product->start_price)  ?></td>
-		<td><?= h($product->start_date->format("Y年m月d日h時i分")) ?></td>
-		<td><?= h($product->end_date->format("Y年m月d日h時i分")) ?></td>
-		<td><?= $this->Html->link("入札",["controller" => "Bids", "action" => "add",$product->id]) ?></td>
+		<td>¥<?= $this->Number->format($product->start_price)  ?></td>
+		<td><?= h($product->start_date->format("Y年m月d日H時i分")) ?></td>
+		<td><?= h($product->end_date->format("Y年m月d日H時i分")) ?></td>
+		<?php if($id != $product->user_id ) { ?>
+			<td><?= $this->Html->link("入札",["controller" => "Bids", "action" => "add",$product->id]) ?></td>
+		<?php }else{ ?>
+			<td></td>
+		<?php } ?>	
 		<?php if( $rest < 7 && $rest > 0){ ?>
 				<td><?= "残り" . $rest . "日" ?></td>
 		<?php }else if($rest == 0){ ?>

@@ -1,4 +1,4 @@
-<h1 class"page-header">入札状況</h1>
+<h2><?=h($product->name) ?>　の入札状況</h2>
 <table class="table table-striped" cellpadding="0" cellspacing="0">
 <tr>
 	<th scope="col"><?=$this->Paginator->sort('user.email','ユーザ名') ?></th>
@@ -9,8 +9,8 @@
 <?php foreach ($bids as $b): ?>
 	<tr>
 		<td><?= h($b->user->email)  ?></td>
-		<td><?= $this->Number->format($b->bid)  ?></td>
-		<td><?= h($b->created->format("Y年m月d日h時i分")) ?></td>
+		<td>¥<?= $this->Number->format($b->bid)  ?></td>
+		<td><?= h($b->created->format("Y年m月d日H時i分")) ?></td>
 	</tr>
 <?php endforeach; ?>
 <?php endif; ?>

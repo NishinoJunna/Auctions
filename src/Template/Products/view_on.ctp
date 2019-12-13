@@ -23,8 +23,8 @@
   </div>
 </div>
 
-<?php echo $this->Html->link(
+<div id="login"><?php echo $this->Html->link(
 	    'ログイン',
 	    array('controller' => 'Users', 'action' => 'login'),
 	    array('class' => 'btn btn-primary', 'role' => 'button')
-	); ?>
+	); ?> </div>

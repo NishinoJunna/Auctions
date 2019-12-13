@@ -28,11 +28,11 @@ function successAction(result){
 	$('#loading').fadeOut();
 	if(result['status']=='success'){
 		showSuccessMessage('入札しました');
-		$('#max_v').html($("#bid_v").val());
+		$('#max_v').html("現在価格："+$("#bid_v").val()+"円");
 		$('#history').html("");
 		for(var key in result['bid']){
 			$('#history').append(
-								"<tr><td>"+result['user_id'][key]+"</td><td>"+
+								"<tr><td>"+result['email'][key]+"</td><td>\¥"+
 								result['bid'][key]+"</td><td>"+
 								result['created'][key]+"</td></tr>");
 		}
@@ -45,11 +45,11 @@ function successAction(result){
 			showErrorMessage('現在価格より多い額で入札できます');
 		}
 			showValidationMessage(result['errors']);
-		$('#max_v').html(result['max']);
+		$('#max_v').html("現在価格："+result['max']+"円");
 		$('#history').html("");
 		for(var key in result['bid']){
 			$('#history').append(
-								"<tr><td>"+result['user_id'][key]+"</td><td>"+
+								"<tr><td>"+result['email'][key]+"</td><td>\¥"+
 								result['bid'][key]+"</td><td>"+
 								result['created'][key]+"</td></tr>");
 		}

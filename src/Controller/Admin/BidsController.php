@@ -17,9 +17,9 @@ class BidsController extends AppController{
 		$connection = ConnectionManager::get('default');
 		//入札の最大値をとる
 		$endbids = $connection
-		->execute('select bt.max, bt.user_id, p.name, p.description, bt.bid, p.user_name
+		->execute('select bt.max, bt.user_id, p.name, p.description, bt.bid, p.user_name, bt.created
 					from 
-						(select b.user_id, b1.max, b1.product_id, b.bid from
+						(select b.user_id, b1.max, b1.product_id, b.bid, b.created from
 						bids as b
 						right join
 							(select product_id, max(bid) as max from
@@ -59,7 +59,7 @@ class BidsController extends AppController{
 			}
 			$this->paginate = ['limit'=>10,'contain'=>['Users','Products'],
 					'order'=>['created'=>'desc']];
-			$histories = $this->paginate($this->Bids->find('all')
+			$histories = $this->paginate($this->Bids->find('all')->contain('Users')
 					->where(['Bids.product_id'=>$id]));
 			$this->set(compact('bid','product','max','histories'));
 		}catch(Exception $e){
@@ -86,14 +86,15 @@ class BidsController extends AppController{
 				$bid->product_id = $product_id;
 				$bid->user_id = $user_id;
 				if($this->Bids->save($bid)){
-					$bidsdata = $this->Bids->find('all')->where(['product_id'=>$product_id])
-														->order(["created"=>"desc"])
+					$bidsdata = $this->Bids->find('all')->contain('Users')
+														->where(['product_id'=>$product_id])
+														->order(["Bids.created"=>"desc"])
 														->limit(10);
 					$result['status']="success";
 					foreach($bidsdata as $biddata){
 						$result['bid'][]=number_format($biddata->bid);
-						$result['user_id'][]=$biddata['user_id'];
-						$result['created'][]=h($biddata->created->format("Y年m月d日h時i分"));
+						$result['email'][]=$biddata->user->email;
+						$result['created'][]=h($biddata->created->format("Y年m月d日H時i分"));
 					}
 					echo json_encode($result);
 					return;
@@ -101,15 +102,16 @@ class BidsController extends AppController{
 					$result['errors']=$bids->errors();
 				}
 			}elseif($this->request->data['bid']<=$max['bid']){
-				$bidsdata = $this->Bids->find('all')->where(['product_id'=>$product_id])
-													->order(["created"=>"desc"])
+				$bidsdata = $this->Bids->find('all')->contain('Users')
+													->where(['product_id'=>$product_id])
+													->order(["Bids.created"=>"desc"])
 													->limit(10);
 				$result['status']="less";
-				$result['max']=$max['bid'];
+				$result['max']=number_format($max['bid']);
 				foreach($bidsdata as $biddata){
 					$result['bid'][]=number_format($biddata->bid);
-					$result['user_id'][]=$biddata['user_id'];
-					$result['created'][]=h($biddata->created->format("Y年m月d日h時i分"));
+					$result['email'][]=$biddata->user->email;
+					$result['created'][]=h($biddata->created->format("Y年m月d日H時i分"));
 				}
 				echo json_encode($result);
 				return;

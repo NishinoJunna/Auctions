@@ -6,12 +6,13 @@ use App\Controller\Admin\AppController;
 class HomesController extends AppController {
 
 	public function index() {
+		$username = $this->MyAuth->user();
 		$this->paginate = [
 				'limit'	=> 6,
 				'contain'	=>	['Bids']
 		];
 		$products = $this->paginate($this->loadModel('Products')->find('all')->contain('Bids')->where(['status'=> 1]));
-		
-		$this->set(compact('products'));
+		$id = $username["id"];
+		$this->set(compact('products','id'));
 	}
 }

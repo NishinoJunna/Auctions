@@ -2,7 +2,7 @@
 <?php
 	echo $this->Form->create($user);
 ?>
-<table class="table table-striped" cellpadding="0" cellspacing="0">
+<table class="password" cellpadding="0" cellspacing="0">
 <tr>
 	<th scope="col"><?php echo "ユーザID"; ?></th>
 	<td><?= h($user->email) ?></td>

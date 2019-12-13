@@ -12,15 +12,35 @@ body{
 
 .main .page-header {
 	margin-top: 0;
+}
 
-#loading {
-	display:none;
-	position:fixed;
-	top:0;
-	left:0;
-	width:100%;
-	height:100%;
-	background: url(http://no1s.biz/kenshu/image/loader.gif) no-repeat center center #ccc;
-	opacity:0.5;
-	z-inedx:9999;
+button#bidding.bid_button {
+	margin-left:220px;
+	background-color:orange;
+	height:35px;
+	width:130px;
+	border: solid 1px #c0c0c0;
+	border-radius:5px;
+	color:white;
+}
+div #right{
+	float:right;
+}
+table.password{
+	margin-left:50px;
+	border-spacing: 0;
+    border-collapse: collapse;
+    width:60%;
+    border:solid 1px #eeeeee;
+}
+table.password tr{
+	text-align:center;
+	height:60px;
+	font-size:20px;
+	border-bottom:solid 1px #eeeeee;
+}
+table.password th{
+	text-align:center;
+	color:white;
+	background-color:#eeeeee;
 }

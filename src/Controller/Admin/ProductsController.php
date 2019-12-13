@@ -12,8 +12,12 @@ class ProductsController extends AppController
 				'limit'	=> 6,
 				'contain'	=>	['Users'],
 		];
-		$products = $this->paginate($this->Products->find('all')->contain('Users')->where(['user_id'=>$username["id"]]));
-		
+		$products = $this->paginate($this
+				->Products
+				->find('all',['order' =>['Products.created' => 'DESC'] ])
+				->contain('Users')
+				->where(['user_id'=>$username["id"]]));
+				
 		$this->set(compact('products','endBid'));
 	}
 
@@ -71,7 +75,7 @@ class ProductsController extends AppController
 		$products = $this->paginate($this->Products->find()
 								->where(['user_id'=>$user['id']])
 								->andWhere(['status'=>1]));
-		$this->set(compact('products'));
+		$this->set(compact('products','user'));
 	}
 	
 	public function viewOff(){
@@ -83,7 +87,7 @@ class ProductsController extends AppController
 		$products = $this->paginate($this->Products->find()
 				->where(['user_id'=>$user['id']])
 				->andWhere(['status'=>2]));
-		$this->set(compact('products'));
+		$this->set(compact('products','user'));
 	}
 
 	public function edit($id = null)
@@ -122,12 +126,13 @@ class ProductsController extends AppController
 				'limit'	=> 10,
 				'contain'	=>	['Users'],
 		];
+		$product = $this->Products->get($id);
 		$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
 								->where(['product_id'=>$id])
 								->andWhere(['Products.status'=>1])
 								->order(["Bids.created"=>"desc"]));
 		
-		$this->set(compact('bids'));
+		$this->set(compact('bids','product'));
 		
 	}
 	
@@ -136,6 +141,7 @@ class ProductsController extends AppController
 				'limit'	=> 10,
 				'contain'	=>	['Users'],
 		];
+		$product = $this->Products->get($id);
 		$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
 				->where(['product_id'=>$id])
 				->andWhere(['Products.status'=>2])
@@ -145,9 +151,10 @@ class ProductsController extends AppController
 				->andWhere(['Products.status'=>2])
 				->max('bid');
 		$maxbid = $max['bid'];
-		$this->set(compact('bids','maxbid'));
+		$this->set(compact('bids','maxbid','product'));
 
 	}
+
 }
 
 

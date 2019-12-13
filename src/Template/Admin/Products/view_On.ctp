@@ -1,4 +1,5 @@
-<h1 class"page-header">オークション開催中の商品一覧</h1>
+<p><?=$user["email"]; ?>さんの</p>
+<h1 class"page-header">オークション開催中の商品</h1>
 <table class="table table-striped" cellpadding="0" cellspacing="0">
 <tr>
 	<th scope="col"><?=$this->Paginator->sort('id','ID') ?></th>
@@ -13,7 +14,7 @@
 		<td><?= $this->Number->format($product->id)  ?></td>
 		<td><?= h($product->name) ?></td>
 		<td><?= h($product->description) ?></td>
-		<td><?= h($product->end_date->format("Y年m月d日h時i分")) ?></td>
+		<td><?= h($product->end_date->format("Y年m月d日H時i分")) ?></td>
 		<td>
 			<?= $this->Html->link("入札状況",["action" => "indexOn",$product->id]) ?>
 		</td>

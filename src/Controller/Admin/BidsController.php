@@ -10,7 +10,7 @@ class BidsController extends AppController{
 	public function historyIndex(){
 		$user=$this->MyAuth->user();
 		$this->paginate = ['limit'=>10,'contain'=>['Users','Products'],
-				'order'=>['product_id'=>'desc','created'=>'desc']];
+				'order'=>['created'=>'desc','product_id'=>'desc']];
 		$bids = $this->paginate($this->Bids->find('all')
 											->where(['Bids.user_id'=>$user['id']])
 											->andWhere(['status'=>1]));
@@ -42,75 +42,78 @@ class BidsController extends AppController{
 	}
 	
 	public function add($id = null){
-		//自分の商品には入札できないようにする？
 		$user_id=$this->MyAuth->user('id');
 		$bid = $this->Bids->newEntity();
-		$this->loadModel('Products');
-		$product = $this->Products->get($id);
-		$maxbid = $this->Bids->find()->where(['product_id'=>$id])->max('bid');
-		if(isset($maxbid)){
-			$max = $maxbid['bid'];
-		}else{
-			$max = $product['start_price'];	
-		}
-		if($this->request->is('post')){
-			$data = $this->request->data['bid'];
-			if($data > $max){
-				$bid->bid = $data;
-				$bid->product_id = $id;
-				$bid->user_id = $user_id;
-				if($this->Bids->save($bid)){
-					$this->Flash->success(__('入札しました'));
-					return $this->redirect(["controller"=>"Homes"]);
-				}
-				$this->Flash->error(__('入札に失敗しました'));
-			}else{
-				$this->Flash->error(__('現在価格より多い額で入札できます'));
+		$this->loadModel('Products');			
+		try{
+			$product = $this->Products->get($id);
+			
+			if($product['user_id'] == $user_id){
+				throw new Exception();
 			}
+			$maxbid = $this->Bids->find()->where(['product_id'=>$id])->max('bid');
+			if(isset($maxbid)){
+				$max = $maxbid['bid'];
+			}else{
+				$max = $product['start_price'];	
+			}
+			$this->paginate = ['limit'=>10,'contain'=>['Users','Products'],
+					'order'=>['created'=>'desc']];
+			$histories = $this->paginate($this->Bids->find('all')
+					->where(['Bids.product_id'=>$id]));
+			$this->set(compact('bid','product','max','histories'));
+		}catch(Exception $e){
+			$this->Flash->error(__("自分の商品、もしくは不正なIDです"));
+			return $this->redirect(["controller"=>"Homes"]);
 		}
-		
-		$this->paginate = ['limit'=>10,'contain'=>['Users','Products'],
-				'order'=>['product_id'=>'desc','created'=>'desc']];
-		$histories = $this->paginate($this->Bids->find('all')
-				->where(['Bids.product_id'=>$id]));
-		$this->set(compact('bid','product','max','histories'));
 	}
 	
 	public function getmaxajax(){
+		date_default_timezone_set('Asia/Tokyo');
+		
 		$this->autoRender = false;
 		$result = [];
-		$bidding = [];
-		$maxs = 0;
 			
 		$user_id=$this->MyAuth->user('id');
 		$bid = $this->Bids->newEntity();
 		$product_id = $this->request->data['product_id'];
 		$max = $this->Bids->find()->where(['product_id'=>$product_id])->max('bid');
+		$product = $this->Bids->Products->get($product_id);
 		
-		//var_dump($product_id);
 		if($this->request->is(['ajax'])){
-		
 			if($this->request->data['bid'] > $max['bid']){
 				$bid->bid = $this->request->data['bid'];
 				$bid->product_id = $product_id;
 				$bid->user_id = $user_id;
 				if($this->Bids->save($bid)){
+					$bidsdata = $this->Bids->find('all')->where(['product_id'=>$product_id])
+														->order(["created"=>"desc"])
+														->limit(10);
 					$result['status']="success";
-					$bidding = $this->request->data['bid'];
+					foreach($bidsdata as $biddata){
+						$result['bid'][]=number_format($biddata->bid);
+						$result['user_id'][]=$biddata['user_id'];
+						$result['created'][]=h($biddata->created->format("Y年m月d日h時i分"));
+					}
 					echo json_encode($result);
-					echo json_encode($bidding);
 					return;
 				}else{
 					$result['errors']=$bids->errors();
 				}
 			}elseif($this->request->data['bid']<=$max['bid']){
-				$result['status']='less';
-				$bidding = $this->request->data['bid'];
-				$maxs =$max['bid'];
+				$bidsdata = $this->Bids->find('all')->where(['product_id'=>$product_id])
+													->order(["created"=>"desc"])
+													->limit(10);
+				$result['status']="less";
+				$result['max']=$max['bid'];
+				foreach($bidsdata as $biddata){
+					$result['bid'][]=number_format($biddata->bid);
+					$result['user_id'][]=$biddata['user_id'];
+					$result['created'][]=h($biddata->created->format("Y年m月d日h時i分"));
+				}
 				echo json_encode($result);
-				echo json_encode($bidding);
-				echo json_encode($maxs);
 				return;
+		
 			}
 		}
  		$result['status']="error";

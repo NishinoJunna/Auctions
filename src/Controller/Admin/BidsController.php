@@ -16,23 +16,28 @@ class BidsController extends AppController{
 											->andWhere(['status'=>1]));
 		$connection = ConnectionManager::get('default');
 		//入札の最大値をとる
-		$max = $connection
-		->execute('select max(b.bid), b.user_id, p.name, p.description, b.bid
-					from bids as b inner join
-					(select pr.name, pr.description, u.email as user_name, pr.status, pr.id 
-					from products as pr
-					inner join users as u 
-					on u.id = pr.user_id) p
-					on b.product_id = p.id
+		$endbids = $connection
+		->execute('select bt.max, bt.user_id, p.name, p.description, bt.bid, p.user_name
+					from 
+						(select b.user_id, b1.max, b1.product_id, b.bid from
+						bids as b
+						right join
+							(select product_id, max(bid) as max from
+							bids
+							group by product_id) b1
+						on b1.product_id = b.product_id
+						and b1.max = b.bid) bt
+					inner join
+						(select pr.name, pr.description, u.email as user_name, pr.status, pr.id 
+						from products as pr
+						inner join users as u 
+						on u.id = pr.user_id) p
+					on bt.product_id = p.id
 					where p.status = 2
-					group by product_id')
+					and bt.user_id = :user_id
+					',["user_id"=>$user['id']])
 		->fetchAll('assoc');
-		$endbids = array();
-		foreach($max as $endbid){
-			if($max['user_id']==$user['id']){
-				$endbids[] = $endbid;
-			}
-		}
+		
 		$this->set(compact('bids','endbids'));
 	}
 	
@@ -63,30 +68,53 @@ class BidsController extends AppController{
 				$this->Flash->error(__('現在価格より多い額で入札できます'));
 			}
 		}
-		$this->set(compact('bid','product','max'));
+		
+		$this->paginate = ['limit'=>10,'contain'=>['Users','Products'],
+				'order'=>['product_id'=>'desc','created'=>'desc']];
+		$histories = $this->paginate($this->Bids->find('all')
+				->where(['Bids.product_id'=>$id]));
+		$this->set(compact('bid','product','max','histories'));
 	}
 	
-	public function getMaxAjax($id = null){
+	public function getmaxajax(){
 		$this->autoRender = false;
+		$result = [];
+		$bidding = [];
+		$maxs = 0;
+			
 		$user_id=$this->MyAuth->user('id');
 		$bid = $this->Bids->newEntity();
-		$max = $this->Bids->find()->where(['product_id'=>$id])->max('bid');
-		echo json_encode($max);
+		$product_id = $this->request->data['product_id'];
+		$max = $this->Bids->find()->where(['product_id'=>$product_id])->max('bid');
+		
+		//var_dump($product_id);
 		if($this->request->is(['ajax'])){
-			$data = $this->request->data['bid'];
-			if($data > $max){
-				$bid->bid = $data;
-				$bid->product_id = $id;
+		
+			if($this->request->data['bid'] > $max['bid']){
+				$bid->bid = $this->request->data['bid'];
+				$bid->product_id = $product_id;
 				$bid->user_id = $user_id;
 				if($this->Bids->save($bid)){
-					$result["status"] = "success";
+					$result['status']="success";
+					$bidding = $this->request->data['bid'];
 					echo json_encode($result);
+					echo json_encode($bidding);
+					return;
+				}else{
+					$result['errors']=$bids->errors();
 				}
-				$result["status"]='入札に失敗しました';
+			}elseif($this->request->data['bid']<=$max['bid']){
+				$result['status']='less';
+				$bidding = $this->request->data['bid'];
+				$maxs =$max['bid'];
 				echo json_encode($result);
-			}else{
-				$result['status']='現在価格より多い額で入札できます';
+				echo json_encode($bidding);
+				echo json_encode($maxs);
+				return;
 			}
 		}
+ 		$result['status']="error";
+ 		echo json_encode($result);
+		return;
 	}
 }

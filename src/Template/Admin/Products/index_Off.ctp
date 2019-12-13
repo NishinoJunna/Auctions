@@ -9,8 +9,7 @@
 <?php if(isset($bids)): 
 	$count = 0; ?>
 <?php foreach ($bids as $b):
-	if($count == 0):
-	$count = 1; ?>
+	if($b->bid == $maxbid):?>
 	<tr style="background-color:#FFFF66">
 		<td><?= h($b->user->email)  ?></td>
 		<td><?= $this->Number->format($b->bid)  ?></td>

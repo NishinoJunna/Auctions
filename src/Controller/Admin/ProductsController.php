@@ -140,8 +140,12 @@ class ProductsController extends AppController
 				->where(['product_id'=>$id])
 				->andWhere(['Products.status'=>2])
 				->order(["Bids.created"=>"desc"]));
-		
-		$this->set(compact('bids'));
+		$max = $this->Products->Bids->find()->contain(["Users","Products"])
+				->where(['product_id'=>$id])
+				->andWhere(['Products.status'=>2])
+				->max('bid');
+		$maxbid = $max['bid'];
+		$this->set(compact('bids','maxbid'));
 
 	}
 }

@@ -1,6 +1,9 @@
 <?php $this->prepend('script',$this->Html->script('admin_bid')); ?>
 
 <h1><?php echo h($product->name); ?></h1>
+<div id="left">
+	<?php  echo $this->Html->image($product->image, array('width'=>"400")); ?>
+</div>
 <div id="right">
 	<p id="max_v" style="font-size:30px;">現在価格：<?php echo $this->Number->format($max); ?>円</p>
 	<p style="font-size:20px;">終了時刻：<?php echo h($product->end_date->format("Y年m月d日 　G時i分"));?></p>

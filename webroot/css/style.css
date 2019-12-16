@@ -26,7 +26,9 @@ button#bidding.bid_button {
 div #right{
 	float:right;
 }
-
+div #left {
+	float:left;
+}
 table.password{
 	margin-left:50px;
 	border-spacing: 0;
@@ -52,7 +54,6 @@ button.register{
 	margin-left:450px;
 	width:100px;
 }
-
 th {
-	background-color:#8080ff;
+	background-color:#8080ff;	
 }

@@ -9,14 +9,14 @@ class HomesController extends AppController {
 	public function index() {
 		$username = $this->MyAuth->user();
 		$this->paginate = [
-				'limit'	=> 6,
-				'contain'	=>	['Bids']
+				'limit'	=> 6
 		];
 		$products = $this->paginate($this->loadModel('Products')->find('all')->contain('Bids')->where(['status'=> 1]));
 		$id = $username["id"];
-		$connection = ConnectionManager::get('default');
-		$max_price = $connection
-		->execute('select p.id, case max(bid) is null when 1 then p.start_price else max(bid) end max
+		/*$connection = ConnectionManager::get('default');
+		$max_prices = $connection
+		->execute('select p.id, p.name, p.description, count(b.product_id) as count, p.start_price, p.start_date, p.end_date, p.user_id,   
+					case max(bid) is null when 1 then p.start_price else max(bid) end max
 					from bids as b 
 					right join products as p
 					on b.product_id = p.id 
@@ -24,8 +24,9 @@ class HomesController extends AppController {
 					group by product_id')
 		->fetchAll('assoc');
 		
-		//var_dump($max_price);exit;
+		$this->Paginator->paginate($max_prices,['limit'=>6]);
+		*/
 				
-		$this->set(compact('products','id','max_price'));
+		$this->set(compact('products','id'));
 	}
 }

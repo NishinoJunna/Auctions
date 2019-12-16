@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Controller\Admin\AppController;
 use \Exception;
 
+
 class ProductsController extends AppController
 {
 	public function index()
@@ -42,19 +43,61 @@ class ProductsController extends AppController
 				return $this->redirect(['action' => 'index']);
 			}
 			
+			$start_date = $p["start_date"];
 			$end_date = $p["end_date"];
 			$end_date = implode("-",$end_date);
 			$end_date = substr($end_date, 0, -6);
+			$start_date = implode("-",$start_date);
+			$start_date = substr($start_date, 0, -6);
 			$end_date = new \DateTime($end_date);
-			$now = date("Y-m-d");
-			$now = new \DateTime($now);
-			$interval = date_diff($now,$end_date);
+			$start_date = new \DateTime($start_date);
+			$interval = date_diff($start_date,$end_date);
 			$rest = $interval->format('%a');
 			
 			if($rest > 30){
 				$this->Flash->error(__('開催期間は最長一月です。'));
 				return $this->redirect(['action' => 'index']);;
 			}
+			
+			//保存先のパスを保存、WWW_ROOT はwebrootを示します。
+			$path = WWW_ROOT . "img/";
+			
+			//アップロードしたファイルの一時的なパスを取得します
+			$img = $p["image"]["name"];
+			
+			$img = explode(".", $img);
+			$format = $img[1];
+			$allowExtension = array('jpeg', 'png', 'jpg');
+			if (!in_array($format, $allowExtension)){
+				$this->Flash->error(__('画像のフォーマットはjpg,jpeg,pngでお願いします。'));
+				return $this->redirect(array('action' => 'index'));
+			}
+			$fname = $img[0];
+			//var_dump($_FILES['image']); die();
+			
+			//現在ある記事のidの最大値を取得します
+			$box = $this->Products->find('All', ['order' =>['Products.id' => 'DESC']])->first();
+			if(empty($box)){
+				$id = 0;
+			}else{
+				$box = $box->toArray();
+				$id = $box["id"];
+			}
+			
+				
+			//今回追加する記事番号にします
+			$id++;
+			$new_file_name = $fname . $id . "." . $format;
+			$to_path = $path . $fname . $id . "." . $format;
+			
+			//var_dump($to_path); die();
+			
+			//DB保存用にファイル名を保存します
+			if(!move_uploaded_file($_FILES['image']['tmp_name'], $to_path)) {
+				$this->Flash->error(__('画像ファイル保存できませんでした'));
+				return $this->redirect(array('action' => 'index'));
+			}
+			$this->request->data['image'] = $new_file_name;
 			
 			$product = $this->Products->patchEntity($product, $this->request->data);
 			if($this->Products->save($product)){
@@ -90,6 +133,7 @@ class ProductsController extends AppController
 				->andWhere(['status'=>2]));
 		$this->set(compact('products','user'));
 	}
+
 
 	public function edit($id = null)
 	{
@@ -168,6 +212,7 @@ class ProductsController extends AppController
 			$this->Flash->error(__("不正なIDです"));
 			return $this->redirect(["action"=>"viewOff"]);
 		}
+
 	}
 
 }

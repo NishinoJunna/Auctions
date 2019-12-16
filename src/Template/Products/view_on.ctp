@@ -23,6 +23,7 @@
   </div>
 </div>
 
+<?php echo $this->Html->image($product->image, array('width'=>"400", "height"=>"300")); ?>
 <div id="login"><?php echo $this->Html->link(
 	    'ログイン',
 	    array('controller' => 'Users', 'action' => 'login'),

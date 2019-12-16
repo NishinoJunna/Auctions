@@ -78,8 +78,11 @@ class BidsController extends AppController{
 		$bid = $this->Bids->newEntity();
 		$product_id = $this->request->data['product_id'];
 		$max = $this->Bids->find()->where(['product_id'=>$product_id])->max('bid');
-		$product = $this->Bids->Products->get($product_id);
 		
+		$product = $this->Bids->Products->get($product_id);
+			if(!isset($max)){
+				$max['bid']=$product['start_price'];
+			}
 		if($this->request->is(['ajax'])){
 			if($this->request->data['bid'] > $max['bid']){
 				$bid->bid = $this->request->data['bid'];

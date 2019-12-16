@@ -9,10 +9,10 @@
 </tr>
 <tr>
 	<th scope="col"><?php echo "パスワード"; ?></th>
-	<td><?php echo $this->Form->input('password',['label' => false]); ?></td>
+	<td><input type="password" name="password" style="width:220px; height:35px; margin:0 auto;" required="required" id="password" class="form-control"></td>
 </tr>
 </table>
 <?php
-echo $this->Form->button("登録");
+echo $this->Form->button("変更",["class"=>"register"]);
 echo $this->Form->end();
 ?>

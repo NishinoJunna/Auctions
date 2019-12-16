@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\Admin\AppController;
+use \Exception;
 
 class ProductsController extends AppController
 {
@@ -126,13 +127,18 @@ class ProductsController extends AppController
 				'limit'	=> 10,
 				'contain'	=>	['Users'],
 		];
-		$product = $this->Products->get($id);
-		$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
-								->where(['product_id'=>$id])
-								->andWhere(['Products.status'=>1])
-								->order(["Bids.created"=>"desc"]));
-		
-		$this->set(compact('bids','product'));
+		try{
+			$product = $this->Products->get($id);
+			$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
+									->where(['product_id'=>$id])
+									->andWhere(['Products.status'=>1])
+									->order(["Bids.created"=>"desc"]));
+			
+			$this->set(compact('bids','product'));
+		}catch(Exception $e){
+			$this->Flash->error(__("不正なIDです"));
+			return $this->redirect(["action"=>"viewOn"]);
+		}
 		
 	}
 	
@@ -141,18 +147,27 @@ class ProductsController extends AppController
 				'limit'	=> 10,
 				'contain'	=>	['Users'],
 		];
-		$product = $this->Products->get($id);
-		$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
-				->where(['product_id'=>$id])
-				->andWhere(['Products.status'=>2])
-				->order(["Bids.created"=>"desc"]));
-		$max = $this->Products->Bids->find()->contain(["Users","Products"])
-				->where(['product_id'=>$id])
-				->andWhere(['Products.status'=>2])
-				->max('bid');
-		$maxbid = $max['bid'];
-		$this->set(compact('bids','maxbid','product'));
-
+		$user = $this->MyAuth->user();
+		try{
+			$product = $this->Products->get($id);
+			if($product['user_id']!=$user["id"]){
+				$this->Flash->error(__("自分以外の商品を見ることはできません"));
+				return $this->redirect(["action"=>"viewOff"]);
+			}
+			$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
+					->where(['product_id'=>$id])
+					->andWhere(['Products.status'=>2])
+					->order(["Bids.created"=>"desc"]));
+			$max = $this->Products->Bids->find()->contain(["Users","Products"])
+					->where(['product_id'=>$id])
+					->andWhere(['Products.status'=>2])
+					->max('bid');
+			$maxbid = $max['bid'];
+			$this->set(compact('bids','maxbid','product'));
+		}catch(Exception $e){
+			$this->Flash->error(__("不正なIDです"));
+			return $this->redirect(["action"=>"viewOff"]);
+		}
 	}
 
 }

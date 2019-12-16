@@ -26,21 +26,28 @@ button#bidding.bid_button {
 div #right{
 	float:right;
 }
+
 table.password{
 	margin-left:50px;
 	border-spacing: 0;
     border-collapse: collapse;
-    width:60%;
+    width:500px;
     border:solid 1px #eeeeee;
+    border-radius:10px;
 }
 table.password tr{
 	text-align:center;
 	height:60px;
 	font-size:20px;
-	border-bottom:solid 1px #eeeeee;
+	border-bottom:solid 2px #eeeeee;
 }
 table.password th{
 	text-align:center;
-	color:white;
 	background-color:#eeeeee;
+}
+
+button.register{
+	margin-top:10px;
+	margin-left:450px;
+	width:100px;
 }

@@ -12,9 +12,9 @@
 	if($b->bid == $maxbid):?>
 	<tr style="background-color:#FFFF66">
 		<td><?= h($b->user->email)  ?></td>
-		<td><?= $this->Number->format($b->bid)  ?></td>
+		<td>¥<?= $this->Number->format($b->bid)  ?></td>
 		<td><?= h($b->created->format("Y年m月d日H時i分")) ?></td>
-		<td>落札</td>
+		<td style="font-weight:bold; color:blue; font-size:15px;">落札</td>
 	</tr>
 	<?php else: ?>
 	<tr>

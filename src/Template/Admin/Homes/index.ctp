@@ -6,11 +6,12 @@
 	<th scope="col"><?=$this->Paginator->sort('description','商品説明') ?></th>
 	<th scope="col">入札した数</th>
 	<th scope="col"><?=$this->Paginator->sort('start_price','開始金額') ?></th>
+	<th scope="col">現在価格</th>
 	<th scope="col"><?=$this->Paginator->sort('start_date','開始日時') ?></th>
 	<th scope="col"><?=$this->Paginator->sort('end_date','終了日時') ?></th>
 	<th scope="col">操作</th>
 </tr>
-<?php foreach ($products as $product): ?>
+<?php foreach ($products as $key => $product): ?>
 	<?php 
 		$end_date = h($product->end_date->format("Y-m-d"));
 		$date = h($product->end_date->format("Ym")); 
@@ -28,6 +29,7 @@
 		<td><?= h($product->description) ?></td>
 		<td><?= $this->Number->format(count($product->bids)) ?></td>
 		<td>¥<?= $this->Number->format($product->start_price)  ?></td>
+		<td>¥<?php echo $this->Number->format($max_price[$key]['max']); ?></td>
 		<td><?= h($product->start_date->format("Y年m月d日H時i分")) ?></td>
 		<td><?= h($product->end_date->format("Y年m月d日H時i分")) ?></td>
 		<?php if($id != $product->user_id ) { ?>

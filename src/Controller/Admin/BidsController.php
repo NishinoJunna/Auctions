@@ -17,9 +17,9 @@ class BidsController extends AppController{
 		$connection = ConnectionManager::get('default');
 		//入札の最大値をとる
 		$endbids = $connection
-		->execute('select bt.max, bt.user_id, p.name, p.description, bt.bid, p.user_name, bt.created
+		->execute('select bt.max, bt.user_id, p.name, p.description, bt.bid, p.user_name, p.end_date
 					from 
-						(select b.user_id, b1.max, b1.product_id, b.bid, b.created from
+						(select b.user_id, b1.max, b1.product_id, b.bid from
 						bids as b
 						right join
 							(select product_id, max(bid) as max from
@@ -28,7 +28,7 @@ class BidsController extends AppController{
 						on b1.product_id = b.product_id
 						and b1.max = b.bid) bt
 					inner join
-						(select pr.name, pr.description, u.email as user_name, pr.status, pr.id 
+						(select pr.name, pr.description, u.email as user_name, pr.status, pr.id, pr.end_date 
 						from products as pr
 						inner join users as u 
 						on u.id = pr.user_id) p
@@ -38,7 +38,7 @@ class BidsController extends AppController{
 					',["user_id"=>$user['id']])
 		->fetchAll('assoc');
 		
-		$this->set(compact('bids','endbids'));
+		$this->set(compact('bids','endbids','user'));
 	}
 	
 	public function add($id = null){

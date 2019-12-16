@@ -17,7 +17,7 @@ class BidsController extends AppController{
 		$connection = ConnectionManager::get('default');
 		//入札の最大値をとる
 		$endbids = $connection
-		->execute('select bt.max, bt.user_id, p.name, p.description, bt.bid, p.user_name
+		->execute('select bt.max, bt.user_id, p.name, p.description, bt.bid, p.user_name, p.end_date
 					from 
 						(select b.user_id, b1.max, b1.product_id, b.bid from
 						bids as b
@@ -28,7 +28,7 @@ class BidsController extends AppController{
 						on b1.product_id = b.product_id
 						and b1.max = b.bid) bt
 					inner join
-						(select pr.name, pr.description, u.email as user_name, pr.status, pr.id 
+						(select pr.name, pr.description, u.email as user_name, pr.status, pr.id, pr.end_date 
 						from products as pr
 						inner join users as u 
 						on u.id = pr.user_id) p
@@ -38,7 +38,7 @@ class BidsController extends AppController{
 					',["user_id"=>$user['id']])
 		->fetchAll('assoc');
 		
-		$this->set(compact('bids','endbids'));
+		$this->set(compact('bids','endbids','user'));
 	}
 	
 	public function add($id = null){
@@ -48,7 +48,7 @@ class BidsController extends AppController{
 		try{
 			$product = $this->Products->get($id);
 			
-			if($product['user_id'] == $user_id){
+			if($product['user_id'] == $user_id || $product['status'] != 1){
 				throw new Exception();
 			}
 			$maxbid = $this->Bids->find()->where(['product_id'=>$id])->max('bid');
@@ -59,7 +59,7 @@ class BidsController extends AppController{
 			}
 			$this->paginate = ['limit'=>10,'contain'=>['Users','Products'],
 					'order'=>['created'=>'desc']];
-			$histories = $this->paginate($this->Bids->find('all')
+			$histories = $this->paginate($this->Bids->find('all')->contain('Users')
 					->where(['Bids.product_id'=>$id]));
 			$this->set(compact('bid','product','max','histories'));
 		}catch(Exception $e){
@@ -79,6 +79,9 @@ class BidsController extends AppController{
 		$product_id = $this->request->data['product_id'];
 		$max = $this->Bids->find()->where(['product_id'=>$product_id])->max('bid');
 		$product = $this->Bids->Products->get($product_id);
+		if(!isset($max)){
+			$max['bid']=$product['start_price'];
+		}
 		
 		if($this->request->is(['ajax'])){
 			if($this->request->data['bid'] > $max['bid']){
@@ -86,14 +89,15 @@ class BidsController extends AppController{
 				$bid->product_id = $product_id;
 				$bid->user_id = $user_id;
 				if($this->Bids->save($bid)){
-					$bidsdata = $this->Bids->find('all')->where(['product_id'=>$product_id])
-														->order(["created"=>"desc"])
+					$bidsdata = $this->Bids->find('all')->contain('Users')
+														->where(['product_id'=>$product_id])
+														->order(["Bids.created"=>"desc"])
 														->limit(10);
 					$result['status']="success";
 					foreach($bidsdata as $biddata){
 						$result['bid'][]=number_format($biddata->bid);
-						$result['user_id'][]=$biddata['user_id'];
-						$result['created'][]=h($biddata->created->format("Y年m月d日h時i分"));
+						$result['email'][]=$biddata->user->email;
+						$result['created'][]=h($biddata->created->format("Y年m月d日H時i分"));
 					}
 					echo json_encode($result);
 					return;
@@ -101,15 +105,16 @@ class BidsController extends AppController{
 					$result['errors']=$bids->errors();
 				}
 			}elseif($this->request->data['bid']<=$max['bid']){
-				$bidsdata = $this->Bids->find('all')->where(['product_id'=>$product_id])
-													->order(["created"=>"desc"])
+				$bidsdata = $this->Bids->find('all')->contain('Users')
+													->where(['product_id'=>$product_id])
+													->order(["Bids.created"=>"desc"])
 													->limit(10);
 				$result['status']="less";
-				$result['max']=$max['bid'];
+				$result['max']=number_format($max['bid']);
 				foreach($bidsdata as $biddata){
 					$result['bid'][]=number_format($biddata->bid);
-					$result['user_id'][]=$biddata['user_id'];
-					$result['created'][]=h($biddata->created->format("Y年m月d日h時i分"));
+					$result['email'][]=$biddata->user->email;
+					$result['created'][]=h($biddata->created->format("Y年m月d日H時i分"));
 				}
 				echo json_encode($result);
 				return;

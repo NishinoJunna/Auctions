@@ -2,8 +2,9 @@
 namespace App\Controller\Admin;
 
 use App\Controller\Admin\AppController;
-use Cake\Filesystem\Folder;
-use Cake\Filesystem\File;
+
+use \Exception;
+
 
 class ProductsController extends AppController
 {
@@ -76,10 +77,16 @@ class ProductsController extends AppController
 			//var_dump($_FILES['image']); die();
 			
 			//現在ある記事のidの最大値を取得します
-			$box = $this->Products->find('All', ['order' =>['Products.id' => 'DESC']])->first()->toArray();
+			$box = $this->Products->find('All', ['order' =>['Products.id' => 'DESC']])->first();
+			//var_dump($box); die();
+			if(empty($box)){
+				$id = 0;
+			}else{
+				$box = $box->toArray();
+				$id = $box["id"];
+			}
 			
 			
-			$id = $box["id"];
 			//今回追加する記事番号にします
 			$id++;
 			$new_file_name = $fname . $id . "." . $format;
@@ -114,7 +121,7 @@ class ProductsController extends AppController
 		$products = $this->paginate($this->Products->find()
 								->where(['user_id'=>$user['id']])
 								->andWhere(['status'=>1]));
-		$this->set(compact('products'));
+		$this->set(compact('products','user'));
 	}
 	
 	public function viewOff(){
@@ -126,7 +133,7 @@ class ProductsController extends AppController
 		$products = $this->paginate($this->Products->find()
 				->where(['user_id'=>$user['id']])
 				->andWhere(['status'=>2]));
-		$this->set(compact('products'));
+		$this->set(compact('products','user'));
 	}
 
 
@@ -166,12 +173,18 @@ class ProductsController extends AppController
 				'limit'	=> 10,
 				'contain'	=>	['Users'],
 		];
-		$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
-								->where(['product_id'=>$id])
-								->andWhere(['Products.status'=>1])
-								->order(["Bids.created"=>"desc"]));
-		
-		$this->set(compact('bids'));
+		try{
+			$product = $this->Products->get($id);
+			$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
+									->where(['product_id'=>$id])
+									->andWhere(['Products.status'=>1])
+									->order(["Bids.created"=>"desc"]));
+			
+			$this->set(compact('bids','product'));
+		}catch(Exception $e){
+			$this->Flash->error(__("不正なIDです"));
+			return $this->redirect(["action"=>"viewOn"]);
+		}
 		
 	}
 	
@@ -180,7 +193,8 @@ class ProductsController extends AppController
 				'limit'	=> 10,
 				'contain'	=>	['Users'],
 		];
-		$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
+
+		/*$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
 				->where(['product_id'=>$id])
 				->andWhere(['Products.status'=>2])
 				->order(["Bids.created"=>"desc"]));
@@ -189,7 +203,30 @@ class ProductsController extends AppController
 				->andWhere(['Products.status'=>2])
 				->max('bid');
 		$maxbid = $max['bid'];
-		$this->set(compact('bids','maxbid'));
+		$this->set(compact('bids','maxbid'));*/
+
+
+		$user = $this->MyAuth->user();
+		try{
+			$product = $this->Products->get($id);
+			if($product['user_id']!=$user["id"]){
+				$this->Flash->error(__("自分以外の商品を見ることはできません"));
+				return $this->redirect(["action"=>"viewOff"]);
+			}
+			$bids = $this->paginate($this->Products->Bids->find()->contain(["Users","Products"])
+					->where(['product_id'=>$id])
+					->andWhere(['Products.status'=>2])
+					->order(["Bids.created"=>"desc"]));
+			$max = $this->Products->Bids->find()->contain(["Users","Products"])
+					->where(['product_id'=>$id])
+					->andWhere(['Products.status'=>2])
+					->max('bid');
+			$maxbid = $max['bid'];
+			$this->set(compact('bids','maxbid','product'));
+		}catch(Exception $e){
+			$this->Flash->error(__("不正なIDです"));
+			return $this->redirect(["action"=>"viewOff"]);
+		}
 
 	}
 

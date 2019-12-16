@@ -25,6 +25,7 @@
 	<?= $this->Html->meta('icon') ?>
 	<title><?= $this->fetch('title') ?></title>
 	<?= $this->fetch('script') ?>
+	<?php echo $this->Html->css('style.css'); ?>
 	<?= $this->fetch('css') ?>
 </head>
 <body>

@@ -1,10 +1,11 @@
-<h1 class"page-header">オークション終了した商品一覧</h1>
+<p><?=$user["email"]; ?>さんの</p>
+<h2 class="header">オークションが終了した商品</h2>
 <table class="table table-striped" cellpadding="0" cellspacing="0">
 <tr>
-	<th scope="col"><?=$this->Paginator->sort('id','ID') ?></th>
-	<th scope="col"><?=$this->Paginator->sort('name','商品名') ?></th>
-	<th scope="col"><?=$this->Paginator->sort('description','商品説明') ?></th>
-	<th scope="col"><?=$this->Paginator->sort('end_date','終了日時') ?></th>
+	<th scope="col">ID</th>
+	<th scope="col">商品名</th>
+	<th scope="col">商品説明</th>
+	<th scope="col">終了日時</th>
 	<th scope="col">操作</th>
 </tr>
 <?php if(isset($products)): ?>
@@ -13,7 +14,7 @@
 		<td><?= $this->Number->format($product->id)  ?></td>
 		<td><?= h($product->name) ?></td>
 		<td><?= h($product->description) ?></td>
-		<td><?= h($product->end_date->format("Y年m月d日h時i分")) ?></td>
+		<td><?= h($product->end_date->format("Y年m月d日H時i分")) ?></td>
 		<td>
 			<?= $this->Html->link("入札状況",["action" => "indexOff",$product->id]) ?>
 		</td>

@@ -27,6 +27,7 @@ create table products(
 	start_date datetime default null,
 	end_date datetime default null,
 	status int(11) not null,
+	image varchar(255) not null,
 	modified datetime default null,
 	created datetime default null,
 	primary key (id)

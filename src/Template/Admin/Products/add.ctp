@@ -6,6 +6,7 @@
 	echo $this->Form->input('start_price');
 	echo $this->Form->input('start_date',['type'=>'datetime', 'minYear'=>date('Y'), 'interval'=> 15 ]);
 	echo $this->Form->input('end_date',['type'=>'datetime', 'minYear'=>date('Y'), 'interval'=> 15 ]);
+	echo "＊画像はjpg,jpegかpngでお願いします。";
 	echo $this->Form->file('image', array(
 								'label' => false,
 								'type' => 'file','multiple'));

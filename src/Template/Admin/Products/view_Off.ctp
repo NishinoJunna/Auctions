@@ -1,11 +1,11 @@
 <p><?=$user["email"]; ?>さんの</p>
-<h1 class"page-header">オークションが終了した商品</h1>
+<h2 class="header">オークションが終了した商品</h2>
 <table class="table table-striped" cellpadding="0" cellspacing="0">
 <tr>
-	<th scope="col"><?=$this->Paginator->sort('id','ID') ?></th>
-	<th scope="col"><?=$this->Paginator->sort('name','商品名') ?></th>
-	<th scope="col"><?=$this->Paginator->sort('description','商品説明') ?></th>
-	<th scope="col"><?=$this->Paginator->sort('end_date','終了日時') ?></th>
+	<th scope="col">ID</th>
+	<th scope="col">商品名</th>
+	<th scope="col">商品説明</th>
+	<th scope="col">終了日時</th>
 	<th scope="col">操作</th>
 </tr>
 <?php if(isset($products)): ?>

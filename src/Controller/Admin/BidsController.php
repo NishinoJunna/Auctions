@@ -48,7 +48,7 @@ class BidsController extends AppController{
 		try{
 			$product = $this->Products->get($id);
 			
-			if($product['user_id'] == $user_id){
+			if($product['user_id'] == $user_id || $product['status'] != 1){
 				throw new Exception();
 			}
 			$maxbid = $this->Bids->find()->where(['product_id'=>$id])->max('bid');

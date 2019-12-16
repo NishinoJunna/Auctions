@@ -32,22 +32,27 @@ table.password{
 	border-spacing: 0;
     border-collapse: collapse;
     width:500px;
-    border:solid 1px #eeeeee;
+    border:solid 1px gray;
     border-radius:10px;
 }
 table.password tr{
 	text-align:center;
 	height:60px;
 	font-size:20px;
-	border-bottom:solid 2px #eeeeee;
+	border-bottom:solid 2px gray;
 }
 table.password th{
 	text-align:center;
-	background-color:#eeeeee;
+	border-right:solid 2px gray;
+	background-color:#8080ff;
 }
 
 button.register{
 	margin-top:10px;
 	margin-left:450px;
 	width:100px;
+}
+
+th {
+	background-color:#8080ff;
 }

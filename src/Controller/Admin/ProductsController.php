@@ -59,13 +59,19 @@ class ProductsController extends AppController
 				return $this->redirect(['action' => 'index']);;
 			}
 			
-			/*//保存先のパスを保存、WWW_ROOT はwebrootを示します。
-			$path = WWW_ROOT . "upimg/";
+			//保存先のパスを保存、WWW_ROOT はwebrootを示します。
+			$path = WWW_ROOT . "img/";
 			
 			//アップロードしたファイルの一時的なパスを取得します
 			$img = $p["image"]["name"];
 			
 			$img = explode(".", $img);
+			$format = $img[1];
+			$allowExtension = array('jpeg', 'png', 'jpg');
+			if (!in_array($format, $allowExtension)){
+				$this->Flash->error(__('画像のフォーマットはjpg,jpeg,pngでお願いします。'));
+				return $this->redirect(array('action' => 'index'));
+			}
 			$fname = $img[0];
 			//var_dump($_FILES['image']); die();
 			
@@ -76,35 +82,17 @@ class ProductsController extends AppController
 			$id = $box["id"];
 			//今回追加する記事番号にします
 			$id++;
-			$new_file_name = $fname . $id . "." . "jpg";
-			$to_path = $path . $fname . $id . "." . "jpg";
+			$new_file_name = $fname . $id . "." . $format;
+			$to_path = $path . $fname . $id . "." . $format;
 			
+			//var_dump($to_path); die();
 			
-			
-			//画像のフォルダとファイル名を指定して保存します
+			//DB保存用にファイル名を保存します
 			if(!move_uploaded_file($_FILES['image']['tmp_name'], $to_path)) {
 				$this->Flash->error(__('画像ファイル保存できませんでした'));
 				return $this->redirect(array('action' => 'index'));
 			}
-			
-			//DB保存用にファイル名を保存します
-			if ($file_name != '') {
-			
-				if (move_uploaded_file($_FILES['ufile']['tmp_name'], $to_path)) {
-					echo "Successful<BR/>";
-			
-			
-					echo "File Name :" . $new_file_name . "<BR/>";
-					echo "File Size :" . $_FILES['ufile']['size'] . "<BR/>";
-					echo "File Type :" . $_FILES['ufile']['type'] . "<BR/>";
-				} else {
-					echo "Error";
-				}
-			} */
-				
-			
-			
-			
+			$this->request->data['image'] = $new_file_name;
 			
 			$product = $this->Products->patchEntity($product, $this->request->data);
 			if($this->Products->save($product)){

@@ -20,7 +20,7 @@
 		$now = new DateTime($now);
 		$end_date = new DateTime($end_date);
 		$interval = date_diff($now,$end_date);
-		$rest = $interval->format('%a days');
+		$rest = $interval->format('%a');
 	?>
 	<tr>
 		<td><?= $this->Number->format($product->id)  ?></td>

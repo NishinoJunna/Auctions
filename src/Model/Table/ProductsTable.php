@@ -29,6 +29,7 @@ class ProductsTable extends Table
 
 	public function validationDefault(Validator $validator)
 	{
+		$validator->provider('upload', \Josegonzalez\Upload\Validation\ImageValidation::class);
 		$validator->provider('Custom', 'App\Model\Validation\CustomValidation');
 		$validator
 		->integer('id')
@@ -71,7 +72,11 @@ class ProductsTable extends Table
 				],
 		])
 		->notEmpty('end_date');
-
+		
+		$validator
+			->requirePresence('image', 'create')
+			->notEmpty('image');
+		
 		return $validator;
 	}
 	public function buildRules(RulesChecker $rules){
